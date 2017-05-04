@@ -1331,8 +1331,9 @@ class ReactImageLightbox extends Component {
                 );
             } else {
                 images.push(
-                    <img
+                    <img // eslint-disable-line jsx-a11y/no-static-element-interactions
                         className={`${imageClass} ${styles.image}`}
+                        onClick={this.requestClose}
                         onDoubleClick={this.handleImageDoubleClick}
                         onWheel={this.handleImageMouseWheel}
                         onDragStart={e => e.preventDefault()}

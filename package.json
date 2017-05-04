@@ -1,7 +1,7 @@
 {
-  "name": "react-image-lightbox",
-  "version": "3.4.3",
-  "description": "A lightbox component for React.js",
+  "name": "none23-react-image-lightbox",
+  "version": "1.0.2",
+  "description": "A lightbox component for React.js, forked from fritz-c/react-image-lightbox, ",
   "scripts": {
     "build": "npm run lint && npm run build:demo && npm run build:umd",
     "build:demo": "npm run clean:demo && cross-env NODE_ENV=production webpack --config webpack.config.demo.babel.js --bail",
@@ -21,12 +21,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/fritz-c/react-image-lightbox.git"
+    "url": "https://github.com/none23/react-image-lightbox.git"
   },
-  "homepage": "https://fritz-c.github.io/react-image-lightbox",
-  "bugs": "https://github.com/fritz-c/react-image-lightbox/issues",
   "authors": [
-    "Chris Fritz"
+    "Chris Fritz",
+    "none23"
   ],
   "license": "MIT",
   "dependencies": {
