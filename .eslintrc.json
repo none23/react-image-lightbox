@@ -1,7 +1,4 @@
-{
-    "parser": "babel-eslint",
-    "extends": "blue-hour",
-    "env": {
-        "browser": true
-    }
+{ "parser": "babel-eslint"
+, "extends": "none23"
+, "env": { "browser": true }
 }
