@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import ReactDOM from 'react-dom'
 import Lightbox from '../react-image-lightbox'
 import styles from './stylesheets/app.scss'
@@ -89,6 +90,15 @@ const captions = [
 , ''
 ]
 
+const ImGonWrapItUp = ({children}) => (
+  <div className='ImGonWrapItUp'>
+    {children}
+  </div>
+)
+ImGonWrapItUp.propTypes = {
+  children: PropTypes.element
+}
+
 class App extends Component {
   constructor () {
     super()
@@ -144,6 +154,8 @@ class App extends Component {
 
           imageTitle={titles[this.state.index]}
           imageCaption={captions[this.state.index]}
+
+          wrapper={ImGonWrapItUp}
         />
       )
     }
