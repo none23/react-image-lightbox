@@ -46,14 +46,17 @@ $maxCaptionHeight: 150px;
     -ms-user-select: none;
     -ms-touch-select: none;
     touch-action: none;
+    z-index: 0;
 }
 
 .imagePrev {
     @extends .image;
+    z-index: -1;
 }
 
 .imageNext {
     @extends .image;
+    z-index: -1;
 }
 
 .imageDiscourager {

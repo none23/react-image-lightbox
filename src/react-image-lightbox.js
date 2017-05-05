@@ -342,85 +342,85 @@ class ReactImageLightbox extends Component {
 
   // Get info for the best suited image to display with the given srcType
   getBestImageForType (srcType) {
-      let imageSrc = this.props[srcType]
-      let fitSizes = {}
+    let imageSrc = this.props[srcType]
+    let fitSizes = {}
 
-      if (this.isImageLoaded(imageSrc)) {
-          // Use full-size image if available
-          fitSizes = this.getFitSizes(this.imageCache[imageSrc].width, this.imageCache[imageSrc].height)
-      } else if (this.isImageLoaded(this.props[`${srcType}Thumbnail`])) {
-          // Fall back to using thumbnail if the image has not been loaded
-          imageSrc = this.props[`${srcType}Thumbnail`]
-          fitSizes = this.getFitSizes(this.imageCache[imageSrc].width, this.imageCache[imageSrc].height, true)
-      } else {
-          return null
-      }
+    if (this.isImageLoaded(imageSrc)) {
+      // Use full-size image if available
+      fitSizes = this.getFitSizes(this.imageCache[imageSrc].width, this.imageCache[imageSrc].height)
+    } else if (this.isImageLoaded(this.props[`${srcType}Thumbnail`])) {
+      // Fall back to using thumbnail if the image has not been loaded
+      imageSrc = this.props[`${srcType}Thumbnail`]
+      fitSizes = this.getFitSizes(this.imageCache[imageSrc].width, this.imageCache[imageSrc].height, true)
+    } else {
+      return null
+    }
 
-      return {
-          src: imageSrc
-          , height: fitSizes.height
-          , width: fitSizes.width
-      }
+    return {
+      src: imageSrc
+    , height: fitSizes.height
+    , width: fitSizes.width
+    }
   }
 
   // Get sizing for when an image is larger than the window
   getFitSizes (width, height, stretch) {
-      const boxSize = this.getLightboxRect()
-      let maxHeight = boxSize.height - (this.props.imagePadding * 2)
-      let maxWidth = boxSize.width - (this.props.imagePadding * 2)
+    const boxSize = this.getLightboxRect()
+    let maxHeight = boxSize.height - (this.props.imagePadding * 2)
+    let maxWidth = boxSize.width - (this.props.imagePadding * 2)
 
-      if (!stretch) {
-          maxHeight = Math.min(maxHeight, height)
-          maxWidth = Math.min(maxWidth, width)
-      }
+    if (!stretch) {
+      maxHeight = Math.min(maxHeight, height)
+      maxWidth = Math.min(maxWidth, width)
+    }
 
-      const maxRatio = maxWidth / maxHeight
-      const srcRatio = width / height
+    const maxRatio = maxWidth / maxHeight
+    const srcRatio = width / height
 
-      if (maxRatio > srcRatio) { // height is the constraining dimension of the photo
-          return {
-              width: width * maxHeight / height
-              , height: maxHeight
-          }
-      }
-
+    if (maxRatio > srcRatio) { // height is the constraining dimension of the photo
       return {
-          width: maxWidth
-          , height: height * maxWidth / width
+        width: width * maxHeight / height
+      , height: maxHeight
       }
+    }
+
+    return {
+      width: maxWidth
+    , height: height * maxWidth / width
+    }
   }
 
   getMaxOffsets (zoomLevel = this.state.zoomLevel) {
-      const currentImageInfo = this.getBestImageForType('mainSrc')
-      if (currentImageInfo === null) {
-          return { maxX: 0, minX: 0, maxY: 0, minY: 0 }
-      }
+    const currentImageInfo = this.getBestImageForType('mainSrc')
+    if (currentImageInfo === null) {
+      return { maxX: 0, minX: 0, maxY: 0, minY: 0 }
+    }
 
-      const boxSize = this.getLightboxRect()
-      const zoomMultiplier = this.getZoomMultiplier(zoomLevel)
+    const boxSize = this.getLightboxRect()
+    const zoomMultiplier = this.getZoomMultiplier(zoomLevel)
 
-      let maxX = 0
-      if ((zoomMultiplier * currentImageInfo.width) - boxSize.width < 0) {
-          // if there is still blank space in the X dimension, don't limit except to the opposite edge
-          maxX = (boxSize.width - (zoomMultiplier * currentImageInfo.width)) / 2
-      } else {
-          maxX = ((zoomMultiplier * currentImageInfo.width) - boxSize.width) / 2
-      }
+    let maxX = 0
+    if ((zoomMultiplier * currentImageInfo.width) - boxSize.width < 0) {
+      // if there is still blank space in the X dimension, don't limit except to the opposite edge
+      maxX = (boxSize.width - (zoomMultiplier * currentImageInfo.width)) / 2
+    } else {
+      maxX = ((zoomMultiplier * currentImageInfo.width) - boxSize.width) / 2
+    }
 
-      let maxY = 0
-      if ((zoomMultiplier * currentImageInfo.height) - boxSize.height < 0) {
-          // if there is still blank space in the Y dimension, don't limit except to the opposite edge
-          maxY = (boxSize.height - (zoomMultiplier * currentImageInfo.height)) / 2
-      } else {
-          maxY = ((zoomMultiplier * currentImageInfo.height) - boxSize.height) / 2
-      }
+    let maxY = 0
+    if ((zoomMultiplier * currentImageInfo.height) - boxSize.height < 0) {
+      // if there is still blank space in the Y dimension, don't limit except to the opposite edge
+      maxY = (boxSize.height - (zoomMultiplier * currentImageInfo.height)) / 2
+    } else {
+      maxY = ((zoomMultiplier * currentImageInfo.height) - boxSize.height) / 2
+    }
 
-      return {
-          maxX
-          , maxY
-          , minX: -1 * maxX
-          , minY: -1 * maxY
-      }
+    return {
+      maxX
+    , maxY
+    , minX: -1 * maxX
+    , minY: -1 * maxY
+    }
   }
 
   // Get image src types
@@ -447,410 +447,398 @@ class ReactImageLightbox extends Component {
     ]
   }
 
-  /**
-   * Get sizing when the image is scaled
-   */
+  // Get sizing when the image is scaled
   getZoomMultiplier (zoomLevel = this.state.zoomLevel) {
-      return ZOOM_RATIO ** zoomLevel
+    return ZOOM_RATIO ** zoomLevel
   }
 
-  /**
-   * Get the size of the lightbox in pixels
-   */
+  // Get the size of the lightbox in pixels
   getLightboxRect () {
-      if (this.outerEl) {
-          return this.outerEl.getBoundingClientRect()
-      }
+    if (this.outerEl) {
+      return this.outerEl.getBoundingClientRect()
+    }
 
-      return {
-          width: getWindowWidth()
-          , height: getWindowHeight()
-          , top: 0
-          , right: 0
-          , bottom: 0
-          , left: 0
-      }
+    return {
+      width: getWindowWidth()
+    , height: getWindowHeight()
+    , top: 0
+    , right: 0
+    , bottom: 0
+    , left: 0
+    }
   }
 
-  /**
-   * Handle user keyboard actions
-   */
+  // Handle user keyboard actions
   handleKeyInput (event) {
-      event.stopPropagation()
+    event.stopPropagation()
 
-      // Ignore key input during animations
-      if (this.isAnimating()) {
-          return
+    // Ignore key input during animations
+    if (this.isAnimating()) {
+      return
+    }
+
+    // Allow slightly faster navigation through the images when user presses keys repeatedly
+    if (event.type === 'keyup') {
+      this.lastKeyDownTime -= this.props.keyRepeatKeyupBonus
+      return
+    }
+
+    const keyCode = event.which || event.keyCode
+
+    // Ignore key presses that happen too close to each other (when rapid fire key pressing or holding down the key)
+    // But allow it if it's a lightbox closing action
+    const currentTime = new Date()
+    if ((currentTime.getTime() - this.lastKeyDownTime) < this.props.keyRepeatLimit && keyCode !== KEYS.ESC) {
+      return
+    }
+    this.lastKeyDownTime = currentTime.getTime()
+
+    switch (keyCode) {
+    // ESC key closes the lightbox
+    case KEYS.ESC:
+      event.preventDefault()
+      this.requestClose(event)
+      break
+
+    // Left arrow key moves to previous image
+    case KEYS.LEFT_ARROW:
+      if (!this.props.prevSrc) {
+        return
       }
 
-      // Allow slightly faster navigation through the images when user presses keys repeatedly
-      if (event.type === 'keyup') {
-          this.lastKeyDownTime -= this.props.keyRepeatKeyupBonus
-          return
+      event.preventDefault()
+      this.keyPressed = true
+      this.requestMovePrev(event)
+      break
+
+    // Right arrow key moves to next image
+    case KEYS.RIGHT_ARROW:
+      if (!this.props.nextSrc) {
+        return
       }
 
-      const keyCode = event.which || event.keyCode
+      event.preventDefault()
+      this.keyPressed = true
+      this.requestMoveNext(event)
+      break
 
-      // Ignore key presses that happen too close to each other (when rapid fire key pressing or holding down the key)
-      // But allow it if it's a lightbox closing action
-      const currentTime = new Date()
-      if ((currentTime.getTime() - this.lastKeyDownTime) < this.props.keyRepeatLimit &&
-          keyCode !== KEYS.ESC
-      ) {
-          return
-      }
-      this.lastKeyDownTime = currentTime.getTime()
-
-      switch (keyCode) {
-      // ESC key closes the lightbox
-      case KEYS.ESC:
-          event.preventDefault()
-          this.requestClose(event)
-          break
-
-      // Left arrow key moves to previous image
-      case KEYS.LEFT_ARROW:
-          if (!this.props.prevSrc) {
-              return
-          }
-
-          event.preventDefault()
-          this.keyPressed = true
-          this.requestMovePrev(event)
-          break
-
-      // Right arrow key moves to next image
-      case KEYS.RIGHT_ARROW:
-          if (!this.props.nextSrc) {
-              return
-          }
-
-          event.preventDefault()
-          this.keyPressed = true
-          this.requestMoveNext(event)
-          break
-
-      default:
-      }
+    default:
+    }
   }
 
-  /**
-   * Handle a mouse wheel event over the lightbox container
-   */
+  // Handle a mouse wheel event over the lightbox container
   handleOuterMousewheel (event) {
-      // Prevent scrolling of the background
-      event.preventDefault()
-      event.stopPropagation()
+    // Prevent scrolling of the background
+    event.preventDefault()
+    event.stopPropagation()
 
-      const xThreshold = WHEEL_MOVE_X_THRESHOLD
-      let actionDelay = 0
-      const imageMoveDelay = 500
+    const xThreshold = WHEEL_MOVE_X_THRESHOLD
+    let actionDelay = 0
+    const imageMoveDelay = 500
 
-      this.clearTimeout(this.resetScrollTimeout)
-      this.resetScrollTimeout = this.setTimeout(() => {
-          this.scrollX = 0
-          this.scrollY = 0
-      }, 300)
+    this.clearTimeout(this.resetScrollTimeout)
+    this.resetScrollTimeout = this.setTimeout(() => {
+      this.scrollX = 0
+      this.scrollY = 0
+    }, 300)
 
-      // Prevent rapid-fire zoom behavior
-      if (this.wheelActionTimeout !== null || this.isAnimating()) {
-          return
+    // Prevent rapid-fire zoom behavior
+    if (this.wheelActionTimeout !== null || this.isAnimating()) {
+      return
+    }
+
+    if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) {
+      // handle horizontal scrolls with image moves
+      this.scrollY = 0
+      this.scrollX += event.deltaX
+
+      const bigLeapX = xThreshold / 2
+      // If the scroll amount has accumulated sufficiently, or a large leap was taken
+      if (this.scrollX >= xThreshold || event.deltaX >= bigLeapX) {
+        // Scroll right moves to next
+        this.requestMoveNext(event)
+        actionDelay = imageMoveDelay
+        this.scrollX = 0
+      } else if (this.scrollX <= -1 * xThreshold || event.deltaX <= -1 * bigLeapX) {
+        // Scroll left moves to previous
+        this.requestMovePrev(event)
+        actionDelay = imageMoveDelay
+        this.scrollX = 0
       }
+    }
 
-      if (Math.abs(event.deltaY) < Math.abs(event.deltaX)) {
-          // handle horizontal scrolls with image moves
-          this.scrollY = 0
-          this.scrollX += event.deltaX
-
-          const bigLeapX = xThreshold / 2
-          // If the scroll amount has accumulated sufficiently, or a large leap was taken
-          if (this.scrollX >= xThreshold || event.deltaX >= bigLeapX) {
-              // Scroll right moves to next
-              this.requestMoveNext(event)
-              actionDelay = imageMoveDelay
-              this.scrollX = 0
-          } else if (this.scrollX <= -1 * xThreshold || event.deltaX <= -1 * bigLeapX) {
-              // Scroll left moves to previous
-              this.requestMovePrev(event)
-              actionDelay = imageMoveDelay
-              this.scrollX = 0
-          }
-      }
-
-      // Allow successive actions after the set delay
-      if (actionDelay !== 0) {
-          this.wheelActionTimeout = this.setTimeout(() => {
-              this.wheelActionTimeout = null
-          }, actionDelay)
-      }
+    // Allow successive actions after the set delay
+    if (actionDelay !== 0) {
+      this.wheelActionTimeout = this.setTimeout(() => {
+        this.wheelActionTimeout = null
+      }, actionDelay)
+    }
   }
 
   handleImageMouseWheel (event) {
-      event.preventDefault()
-      const yThreshold = WHEEL_MOVE_Y_THRESHOLD
+    event.preventDefault()
+    const yThreshold = WHEEL_MOVE_Y_THRESHOLD
 
-      if (Math.abs(event.deltaY) >= Math.abs(event.deltaX)) {
-          event.stopPropagation()
-          // If the vertical scroll amount was large enough, perform a zoom
-          if (Math.abs(event.deltaY) < yThreshold) {
-              return
-          }
-
-          this.scrollX = 0
-          this.scrollY += event.deltaY
-
-          this.changeZoom(
-              this.state.zoomLevel - event.deltaY,
-              event.clientX,
-              event.clientY
-          )
+    if (Math.abs(event.deltaY) >= Math.abs(event.deltaX)) {
+      event.stopPropagation()
+      // If the vertical scroll amount was large enough, perform a zoom
+      if (Math.abs(event.deltaY) < yThreshold) {
+          return
       }
+
+      this.scrollX = 0
+      this.scrollY += event.deltaY
+
+      this.changeZoom(
+        this.state.zoomLevel - event.deltaY,
+        event.clientX,
+        event.clientY
+      )
+    }
   }
 
-  /**
-   * Handle a double click on the current image
-   */
+  // Handle a double click on the current image
   handleImageDoubleClick (event) {
-      if (this.state.zoomLevel > MIN_ZOOM_LEVEL) {
-          // A double click when zoomed in zooms all the way out
-          this.changeZoom(
-              MIN_ZOOM_LEVEL,
-              event.clientX,
-              event.clientY
-          )
-      } else {
-          // A double click when zoomed all the way out zooms in
-          this.changeZoom(
-              this.state.zoomLevel + ZOOM_BUTTON_INCREMENT_SIZE,
-              event.clientX,
-              event.clientY
-          )
-      }
+    if (this.state.zoomLevel > MIN_ZOOM_LEVEL) {
+      // A double click when zoomed in zooms all the way out
+      this.changeZoom(
+        MIN_ZOOM_LEVEL,
+        event.clientX,
+        event.clientY
+      )
+    } else {
+      // A double click when zoomed all the way out zooms in
+      this.changeZoom(
+        this.state.zoomLevel + ZOOM_BUTTON_INCREMENT_SIZE,
+        event.clientX,
+        event.clientY
+      )
+    }
   }
 
   static isTargetMatchImage (target) {
-      return target && /ril-image-current/.test(target.className)
+    return target && /ril-image-current/.test(target.className)
   }
 
   shouldHandleEvent (source) {
-      if (this.eventsSource === source) {
-          return true
+    if (this.eventsSource === source) {
+      return true
+    }
+    if (this.eventsSource === SOURCE_ANY) {
+      this.eventsSource = source
+      return true
+    }
+    switch (source) {
+    case SOURCE_MOUSE:
+      return false
+    case SOURCE_TOUCH:
+      this.eventsSource = SOURCE_TOUCH
+      this.filterPointersBySource()
+      return true
+    case SOURCE_POINTER:
+      if (this.eventsSource === SOURCE_MOUSE) {
+        this.eventsSource = SOURCE_POINTER
+        this.filterPointersBySource()
+        return true
       }
-      if (this.eventsSource === SOURCE_ANY) {
-          this.eventsSource = source
-          return true
-      }
-      switch (source) {
-      case SOURCE_MOUSE:
-          return false
-      case SOURCE_TOUCH:
-          this.eventsSource = SOURCE_TOUCH
-          this.filterPointersBySource()
-          return true
-      case SOURCE_POINTER:
-          if (this.eventsSource === SOURCE_MOUSE) {
-              this.eventsSource = SOURCE_POINTER
-              this.filterPointersBySource()
-              return true
-          }
-          return false
-      default:
-          return false
-      }
+      return false
+    default:
+      return false
+    }
   }
 
   static parseMouseEvent (mouseEvent) {
-      return {
-          id: 'mouse'
-          , source: SOURCE_MOUSE
-          , x: parseInt(mouseEvent.clientX, 10)
-          , y: parseInt(mouseEvent.clientY, 10)
-      }
+    return {
+      id: 'mouse'
+    , source: SOURCE_MOUSE
+    , x: parseInt(mouseEvent.clientX, 10)
+    , y: parseInt(mouseEvent.clientY, 10)
+    }
   }
 
   static parseTouchPointer (touchPointer) {
-      return {
-          id: touchPointer.identifier
-          , source: SOURCE_TOUCH
-          , x: parseInt(touchPointer.clientX, 10)
-          , y: parseInt(touchPointer.clientY, 10)
-      }
+    return {
+      id: touchPointer.identifier
+    , source: SOURCE_TOUCH
+    , x: parseInt(touchPointer.clientX, 10)
+    , y: parseInt(touchPointer.clientY, 10)
+    }
   }
 
   static parsePointerEvent (pointerEvent) {
-      return {
-          id: pointerEvent.pointerId
-          , source: SOURCE_POINTER
-          , x: parseInt(pointerEvent.clientX, 10)
-          , y: parseInt(pointerEvent.clientY, 10)
-      }
+    return {
+      id: pointerEvent.pointerId
+    , source: SOURCE_POINTER
+    , x: parseInt(pointerEvent.clientX, 10)
+    , y: parseInt(pointerEvent.clientY, 10)
+    }
   }
 
   addPointer (pointer) {
-      this.pointerList.push(pointer)
+    this.pointerList.push(pointer)
   }
 
   removePointer (pointer) {
-      this.pointerList = this.pointerList.filter(({id}) => id !== pointer.id)
+    this.pointerList = this.pointerList.filter(({id}) => id !== pointer.id)
   }
 
   filterPointersBySource () {
-      this.pointerList = this.pointerList.filter(({source}) => source === this.eventsSource)
+    this.pointerList = this.pointerList.filter(({source}) => source === this.eventsSource)
   }
 
   handleMouseDown (event) {
-      if (this.shouldHandleEvent(SOURCE_MOUSE) && ReactImageLightbox.isTargetMatchImage(event.target)) {
-          this.addPointer(ReactImageLightbox.parseMouseEvent(event))
-          this.multiPointerStart(event)
-      }
+    if (this.shouldHandleEvent(SOURCE_MOUSE) && ReactImageLightbox.isTargetMatchImage(event.target)) {
+      this.addPointer(ReactImageLightbox.parseMouseEvent(event))
+      this.multiPointerStart(event)
+    }
   }
 
   handleMouseMove (event) {
-      if (this.shouldHandleEvent(SOURCE_MOUSE)) {
-          this.multiPointerMove(event, [ReactImageLightbox.parseMouseEvent(event)])
-      }
+    if (this.shouldHandleEvent(SOURCE_MOUSE)) {
+      this.multiPointerMove(event, [ReactImageLightbox.parseMouseEvent(event)])
+    }
   }
 
   handleMouseUp (event) {
-      if (this.shouldHandleEvent(SOURCE_MOUSE)) {
-          this.removePointer(ReactImageLightbox.parseMouseEvent(event))
-          this.multiPointerEnd(event)
-      }
+    if (this.shouldHandleEvent(SOURCE_MOUSE)) {
+      this.removePointer(ReactImageLightbox.parseMouseEvent(event))
+      this.multiPointerEnd(event)
+    }
   }
 
   handlePointerEvent (event) {
-      if (this.shouldHandleEvent(SOURCE_POINTER)) {
-          switch (event.type) {
-          case 'pointerdown':
-              if (ReactImageLightbox.isTargetMatchImage(event.target)) {
-                  this.addPointer(ReactImageLightbox.parsePointerEvent(event))
-                  this.multiPointerStart(event)
-              }
-              break
-          case 'pointermove':
-              this.multiPointerMove(event, [ReactImageLightbox.parsePointerEvent(event)])
-              break
-          case 'pointerup':
-          case 'pointercancel':
-              this.removePointer(ReactImageLightbox.parsePointerEvent(event))
-              this.multiPointerEnd(event)
-              break
-          default:
-              break
-          }
+    if (this.shouldHandleEvent(SOURCE_POINTER)) {
+      switch (event.type) {
+      case 'pointerdown':
+        if (ReactImageLightbox.isTargetMatchImage(event.target)) {
+            this.addPointer(ReactImageLightbox.parsePointerEvent(event))
+            this.multiPointerStart(event)
+        }
+        break
+      case 'pointermove':
+        this.multiPointerMove(event, [ReactImageLightbox.parsePointerEvent(event)])
+        break
+      case 'pointerup':
+      case 'pointercancel':
+        this.removePointer(ReactImageLightbox.parsePointerEvent(event))
+        this.multiPointerEnd(event)
+        break
+      default:
+        break
       }
+    }
   }
 
   handleTouchStart (event) {
-      if (this.shouldHandleEvent(SOURCE_TOUCH) && ReactImageLightbox.isTargetMatchImage(event.target)) {
-          [].forEach.call(event.changedTouches,
-              eventTouch => this.addPointer(ReactImageLightbox.parseTouchPointer(eventTouch)))
-          this.multiPointerStart(event)
-      }
+    if (this.shouldHandleEvent(SOURCE_TOUCH) && ReactImageLightbox.isTargetMatchImage(event.target)) {
+      [].forEach.call(event.changedTouches,
+        eventTouch => this.addPointer(ReactImageLightbox.parseTouchPointer(eventTouch)))
+      this.multiPointerStart(event)
+    }
   }
 
   handleTouchMove (event) {
-      if (this.shouldHandleEvent(SOURCE_TOUCH)) {
-          this.multiPointerMove(event, [].map.call(event.changedTouches,
-              eventTouch => ReactImageLightbox.parseTouchPointer(eventTouch)))
-      }
+    if (this.shouldHandleEvent(SOURCE_TOUCH)) {
+      this.multiPointerMove(event, [].map.call(event.changedTouches,
+        eventTouch => ReactImageLightbox.parseTouchPointer(eventTouch)))
+    }
   }
 
   handleTouchEnd (event) {
-      if (this.shouldHandleEvent(SOURCE_TOUCH)) {
-          [].map.call(event.changedTouches,
-              touch => this.removePointer(ReactImageLightbox.parseTouchPointer(touch)))
-          this.multiPointerEnd(event)
-      }
+    if (this.shouldHandleEvent(SOURCE_TOUCH)) {
+      [].map.call(event.changedTouches,
+        touch => this.removePointer(ReactImageLightbox.parseTouchPointer(touch)))
+      this.multiPointerEnd(event)
+    }
   }
 
   decideMoveOrSwipe (pointer) {
-      if (this.state.zoomLevel <= MIN_ZOOM_LEVEL) {
-          this.handleSwipeStart(pointer)
-      } else {
-          this.handleMoveStart(pointer)
-      }
+    if (this.state.zoomLevel <= MIN_ZOOM_LEVEL) {
+      this.handleSwipeStart(pointer)
+    } else {
+      this.handleMoveStart(pointer)
+    }
   }
 
   multiPointerStart (event) {
-      this.handleEnd(null)
-      switch (this.pointerList.length) {
-      case 1: {
-          event.preventDefault()
-          this.decideMoveOrSwipe(this.pointerList[0])
-          break
-      }
-      case 2: {
-          event.preventDefault()
-          this.handlePinchStart(this.pointerList)
-          break
-      }
-      default:
-          break
-      }
+    this.handleEnd(null)
+    switch (this.pointerList.length) {
+    case 1: {
+      event.preventDefault()
+      this.decideMoveOrSwipe(this.pointerList[0])
+      break
+    }
+    case 2: {
+      event.preventDefault()
+      this.handlePinchStart(this.pointerList)
+      break
+    }
+    default:
+      break
+    }
   }
 
   multiPointerMove (event, pointerList) {
-      switch (this.currentAction) {
-      case ACTION_MOVE: {
-          event.preventDefault()
-          this.handleMove(pointerList[0])
-          break
-      }
-      case ACTION_SWIPE: {
-          event.preventDefault()
-          this.handleSwipe(pointerList[0])
-          break
-      }
-      case ACTION_PINCH: {
-          event.preventDefault()
-          this.handlePinch(pointerList)
-          break
-      }
-      default:
-          break
-      }
+    switch (this.currentAction) {
+    case ACTION_MOVE: {
+      event.preventDefault()
+      this.handleMove(pointerList[0])
+      break
+    }
+    case ACTION_SWIPE: {
+      event.preventDefault()
+      this.handleSwipe(pointerList[0])
+      break
+    }
+    case ACTION_PINCH: {
+      event.preventDefault()
+      this.handlePinch(pointerList)
+      break
+    }
+    default:
+      break
+    }
   }
 
   multiPointerEnd (event) {
-      if (this.currentAction !== ACTION_NONE) {
-          this.setPreventInnerClose()
-          this.handleEnd(event)
-      }
-      switch (this.pointerList.length) {
-      case 0: {
-          this.eventsSource = SOURCE_ANY
-          break
-      }
-      case 1: {
-          event.preventDefault()
-          this.decideMoveOrSwipe(this.pointerList[0])
-          break
-      }
-      case 2: {
-          event.preventDefault()
-          this.handlePinchStart(this.pointerList)
-          break
-      }
-      default:
-          break
-      }
+    if (this.currentAction !== ACTION_NONE) {
+      this.setPreventInnerClose()
+      this.handleEnd(event)
+    }
+    switch (this.pointerList.length) {
+    case 0: {
+      this.eventsSource = SOURCE_ANY
+      break
+    }
+    case 1: {
+      event.preventDefault()
+      this.decideMoveOrSwipe(this.pointerList[0])
+      break
+    }
+    case 2: {
+      event.preventDefault()
+      this.handlePinchStart(this.pointerList)
+      break
+    }
+    default:
+      break
+    }
   }
 
   handleEnd (event) {
-      switch (this.currentAction) {
-      case ACTION_MOVE:
-          this.handleMoveEnd(event)
-          break
-      case ACTION_SWIPE:
-          this.handleSwipeEnd(event)
-          break
-      case ACTION_PINCH:
-          this.handlePinchEnd(event)
-          break
-      default:
-          break
-      }
+    switch (this.currentAction) {
+    case ACTION_MOVE:
+      this.handleMoveEnd(event)
+      break
+    case ACTION_SWIPE:
+      this.handleSwipeEnd(event)
+      break
+    case ACTION_PINCH:
+      this.handlePinchEnd(event)
+      break
+    default:
+      break
+    }
   }
 
   /*  Handle move start over the lightbox container
@@ -859,14 +847,14 @@ class ReactImageLightbox extends Component {
    *  - On a touchstart event
    */
   handleMoveStart ({x: clientX, y: clientY}) {
-      if (!this.props.enableZoom) {
-          return
-      }
-      this.currentAction = ACTION_MOVE
-      this.moveStartX = clientX
-      this.moveStartY = clientY
-      this.moveStartOffsetX = this.state.offsetX
-      this.moveStartOffsetY = this.state.offsetY
+    if (!this.props.enableZoom) {
+      return
+    }
+    this.currentAction = ACTION_MOVE
+    this.moveStartX = clientX
+    this.moveStartY = clientY
+    this.moveStartOffsetX = this.state.offsetX
+    this.moveStartOffsetY = this.state.offsetY
   }
 
   /*  Handle dragging over the lightbox container
@@ -875,293 +863,288 @@ class ReactImageLightbox extends Component {
    *  - After a touchstart and before a touchend event
    */
   handleMove ({x: clientX, y: clientY}) {
-      const newOffsetX = (this.moveStartX - clientX) + this.moveStartOffsetX
-      const newOffsetY = (this.moveStartY - clientY) + this.moveStartOffsetY
-      if (this.state.offsetX !== newOffsetX || this.state.offsetY !== newOffsetY) {
-          this.setState({
-              offsetX: newOffsetX
-              , offsetY: newOffsetY
-          })
-      }
+    const newOffsetX = (this.moveStartX - clientX) + this.moveStartOffsetX
+    const newOffsetY = (this.moveStartY - clientY) + this.moveStartOffsetY
+    if (this.state.offsetX !== newOffsetX || this.state.offsetY !== newOffsetY) {
+      this.setState({
+        offsetX: newOffsetX
+      , offsetY: newOffsetY
+      })
+    }
   }
 
   handleMoveEnd () {
-      this.currentAction = ACTION_NONE
-      this.moveStartX = 0
-      this.moveStartY = 0
-      this.moveStartOffsetX = 0
-      this.moveStartOffsetY = 0
-      // Snap image back into frame if outside max offset range
-      const maxOffsets = this.getMaxOffsets()
-      const nextOffsetX = Math.max(maxOffsets.minX, Math.min(maxOffsets.maxX, this.state.offsetX))
-      const nextOffsetY = Math.max(maxOffsets.minY, Math.min(maxOffsets.maxY, this.state.offsetY))
-      if (nextOffsetX !== this.state.offsetX || nextOffsetY !== this.state.offsetY) {
-          this.setState({
-              offsetX: nextOffsetX
-              , offsetY: nextOffsetY
-              , shouldAnimate: true
-          })
-          this.setTimeout(() => {
-              this.setState({ shouldAnimate: false })
-          }, this.props.animationDuration)
-      }
+    this.currentAction = ACTION_NONE
+    this.moveStartX = 0
+    this.moveStartY = 0
+    this.moveStartOffsetX = 0
+    this.moveStartOffsetY = 0
+    // Snap image back into frame if outside max offset range
+    const maxOffsets = this.getMaxOffsets()
+    const nextOffsetX = Math.max(maxOffsets.minX, Math.min(maxOffsets.maxX, this.state.offsetX))
+    const nextOffsetY = Math.max(maxOffsets.minY, Math.min(maxOffsets.maxY, this.state.offsetY))
+    if (nextOffsetX !== this.state.offsetX || nextOffsetY !== this.state.offsetY) {
+      this.setState({
+        offsetX: nextOffsetX
+      , offsetY: nextOffsetY
+      , shouldAnimate: true
+      })
+      this.setTimeout(() => {
+        this.setState({ shouldAnimate: false })
+      }, this.props.animationDuration)
+    }
   }
 
   handleSwipeStart ({x: clientX, y: clientY}) {
-      this.currentAction = ACTION_SWIPE
-      this.swipeStartX = clientX
-      this.swipeStartY = clientY
-      this.swipeEndX = clientX
-      this.swipeEndY = clientY
+    this.currentAction = ACTION_SWIPE
+    this.swipeStartX = clientX
+    this.swipeStartY = clientY
+    this.swipeEndX = clientX
+    this.swipeEndY = clientY
   }
 
   handleSwipe ({x: clientX, y: clientY}) {
-      this.swipeEndX = clientX
-      this.swipeEndY = clientY
+    this.swipeEndX = clientX
+    this.swipeEndY = clientY
   }
 
   handleSwipeEnd (event) {
-      const xDiff = this.swipeEndX - this.swipeStartX
-      const xDiffAbs = Math.abs(xDiff)
-      const yDiffAbs = Math.abs(this.swipeEndY - this.swipeStartY)
+    const xDiff = this.swipeEndX - this.swipeStartX
+    const xDiffAbs = Math.abs(xDiff)
+    const yDiffAbs = Math.abs(this.swipeEndY - this.swipeStartY)
 
-      this.currentAction = ACTION_NONE
-      this.swipeStartX = 0
-      this.swipeStartY = 0
-      this.swipeEndX = 0
-      this.swipeEndY = 0
+    this.currentAction = ACTION_NONE
+    this.swipeStartX = 0
+    this.swipeStartY = 0
+    this.swipeEndX = 0
+    this.swipeEndY = 0
 
-      if (!event || this.isAnimating() || xDiffAbs < yDiffAbs * 1.5) {
-          return
+    if (!event || this.isAnimating() || xDiffAbs < yDiffAbs * 1.5) {
+      return
+    }
+
+    if (xDiffAbs < MIN_SWIPE_DISTANCE) {
+      const boxRect = this.getLightboxRect()
+      if (xDiffAbs < boxRect.width / 4) {
+        return
       }
+    }
 
-      if (xDiffAbs < MIN_SWIPE_DISTANCE) {
-          const boxRect = this.getLightboxRect()
-          if (xDiffAbs < boxRect.width / 4) {
-              return
-          }
-      }
-
-      if (xDiff > 0 && this.props.prevSrc) {
-          event.preventDefault()
-          this.requestMovePrev()
-      } else if (xDiff < 0 && this.props.nextSrc) {
-          event.preventDefault()
-          this.requestMoveNext()
-      }
+    if (xDiff > 0 && this.props.prevSrc) {
+      event.preventDefault()
+      this.requestMovePrev()
+    } else if (xDiff < 0 && this.props.nextSrc) {
+      event.preventDefault()
+      this.requestMoveNext()
+    }
   }
 
   calculatePinchDistance ([a, b] = this.pinchTouchList) {
-      return Math.sqrt(((a.x - b.x) ** 2) + ((a.y - b.y) ** 2))
+    return Math.sqrt(((a.x - b.x) ** 2) + ((a.y - b.y) ** 2))
   }
 
   calculatePinchCenter ([a, b] = this.pinchTouchList) {
-      return {
-          x: a.x - ((a.x - b.x) / 2)
-          , y: a.y - ((a.y - b.y) / 2)
-      }
+    return {
+      x: a.x - ((a.x - b.x) / 2)
+    , y: a.y - ((a.y - b.y) / 2)
+    }
   }
 
   handlePinchStart (pointerList) {
-      if (!this.props.enableZoom) {
-          return
-      }
-      this.currentAction = ACTION_PINCH
-      this.pinchTouchList = pointerList.map(({id, x, y}) => ({id, x, y}))
-      this.pinchDistance = this.calculatePinchDistance()
+    if (!this.props.enableZoom) {
+      return
+    }
+    this.currentAction = ACTION_PINCH
+    this.pinchTouchList = pointerList.map(({id, x, y}) => ({id, x, y}))
+    this.pinchDistance = this.calculatePinchDistance()
   }
 
   handlePinch (pointerList) {
-      this.pinchTouchList = this.pinchTouchList.map((oldPointer) => {
-          for (let i = 0; i < pointerList.length; i++) {
-              if (pointerList[i].id === oldPointer.id) {
-                  return pointerList[i]
-              }
-          }
+    this.pinchTouchList = this.pinchTouchList.map((oldPointer) => {
+      for (let i = 0; i < pointerList.length; i++) {
+        if (pointerList[i].id === oldPointer.id) {
+          return pointerList[i]
+        }
+      }
+      return oldPointer
+    })
 
-          return oldPointer
-      })
+    const newDistance = this.calculatePinchDistance()
 
-      const newDistance = this.calculatePinchDistance()
+    // Propably this should be more complicated... but works fine?
+    const zoomLevel = this.state.zoomLevel + newDistance - this.pinchDistance
 
-      // Propably this should be more complicated... but works fine?
-      const zoomLevel = this.state.zoomLevel + newDistance - this.pinchDistance
-
-      this.pinchDistance = newDistance
-      const {x: clientX, y: clientY} = this.calculatePinchCenter(this.pinchTouchList)
-      this.changeZoom(
-          zoomLevel,
-          clientX,
-          clientY
-      )
+    this.pinchDistance = newDistance
+    const {x: clientX, y: clientY} = this.calculatePinchCenter(this.pinchTouchList)
+    this.changeZoom(zoomLevel, clientX, clientY)
   }
 
   handlePinchEnd () {
-      this.currentAction = ACTION_NONE
-      this.pinchTouchList = null
-      this.pinchDistance = 0
+    this.currentAction = ACTION_NONE
+    this.pinchTouchList = null
+    this.pinchDistance = 0
   }
 
   // Handle the window resize event
   handleWindowResize () {
-      this.clearTimeout(this.resizeTimeout)
-      this.resizeTimeout = this.setTimeout(this.forceUpdate.bind(this), 100)
+    this.clearTimeout(this.resizeTimeout)
+    this.resizeTimeout = this.setTimeout(this.forceUpdate.bind(this), 100)
   }
 
   handleZoomInButtonClick () {
-      this.changeZoom(this.state.zoomLevel + ZOOM_BUTTON_INCREMENT_SIZE)
+    this.changeZoom(this.state.zoomLevel + ZOOM_BUTTON_INCREMENT_SIZE)
   }
 
   handleZoomOutButtonClick () {
-      this.changeZoom(this.state.zoomLevel - ZOOM_BUTTON_INCREMENT_SIZE)
+    this.changeZoom(this.state.zoomLevel - ZOOM_BUTTON_INCREMENT_SIZE)
   }
 
   handleCaptionMousewheel (event) {
-      event.stopPropagation()
+    event.stopPropagation()
 
-      if (!this.caption) {
-          return
-      }
+    if (!this.caption) {
+      return
+    }
 
-      const height = this.caption.getBoundingClientRect().height
-      const scrollHeight = this.caption.scrollHeight
-      const scrollTop = this.caption.scrollTop
-      if ((event.deltaY > 0 && (height + scrollTop) >= scrollHeight) ||
-          (event.deltaY < 0 && scrollTop <= 0)
-      ) {
-          event.preventDefault()
-      }
+    const height = this.caption.getBoundingClientRect().height
+    const scrollHeight = this.caption.scrollHeight
+    const scrollTop = this.caption.scrollTop
+    if ((event.deltaY > 0 && (height + scrollTop) >= scrollHeight) ||
+      (event.deltaY < 0 && scrollTop <= 0)
+    ) {
+      event.preventDefault()
+    }
   }
 
   // Detach key and mouse input events
   isAnimating () {
-      return this.state.shouldAnimate || this.state.isClosing
+    return this.state.shouldAnimate || this.state.isClosing
   }
 
   // Check if image is loaded
   isImageLoaded (imageSrc) {
-      return imageSrc && (imageSrc in this.imageCache) && this.imageCache[imageSrc].loaded
+    return imageSrc && (imageSrc in this.imageCache) && this.imageCache[imageSrc].loaded
   }
 
   // Load image from src and call callback with image width and height on load
   loadImage (srcType, imageSrc, done) {
-      // Return the image info if it is already cached
-      if (this.isImageLoaded(imageSrc)) {
-          this.setTimeout(() => {
-              done()
-          }, 1)
-          return
-      }
-
-      const that = this
-      const inMemoryImage = new Image()
-
-      inMemoryImage.onerror = (errorEvent) => {
-          this.props.onImageLoadError(imageSrc, srcType, errorEvent)
-          done(errorEvent)
-      }
-
-      inMemoryImage.onload = function onLoad () {
-          that.imageCache[imageSrc] = {
-              loaded: true
-              , width: this.width
-              , height: this.height
-          }
-
+    // Return the image info if it is already cached
+    if (this.isImageLoaded(imageSrc)) {
+      this.setTimeout(() => {
           done()
+      }, 1)
+      return
+    }
+
+    const that = this
+    const inMemoryImage = new Image()
+
+    inMemoryImage.onerror = (errorEvent) => {
+      this.props.onImageLoadError(imageSrc, srcType, errorEvent)
+      done(errorEvent)
+    }
+
+    inMemoryImage.onload = function onLoad () {
+      that.imageCache[imageSrc] = {
+        loaded: true
+      , width: this.width
+      , height: this.height
       }
 
-      inMemoryImage.src = imageSrc
+      done()
+    }
+
+    inMemoryImage.src = imageSrc
   }
 
   // Load all images and their thumbnails
   loadAllImages (props = this.props) {
-      const generateLoadDoneCallback = (srcType, imageSrc) => (err) => {
-          // Give up showing image on error
-          if (err) {
-              return
-          }
-
-          // Don't rerender if the src is not the same as when the load started
-          // or if the component has unmounted
-          if (this.props[srcType] !== imageSrc || !this.mounted) {
-              return
-          }
-
-          // Force rerender with the new image
-          this.forceUpdate()
+    const generateLoadDoneCallback = (srcType, imageSrc) => (err) => {
+      // Give up showing image on error
+      if (err) {
+          return
       }
 
-      // Load the images
-      this.getSrcTypes().forEach((srcType) => {
-          const type = srcType.name
+      // Don't rerender if the src is not the same as when the load started
+      // or if the component has unmounted
+      if (this.props[srcType] !== imageSrc || !this.mounted) {
+          return
+      }
 
-          // Load unloaded images
-          if (props[type] && !this.isImageLoaded(props[type])) {
-              this.loadImage(type, props[type], generateLoadDoneCallback(type, props[type]))
-          }
-      })
+      // Force rerender with the new image
+      this.forceUpdate()
+    }
+
+    // Load the images
+    this.getSrcTypes().forEach((srcType) => {
+      const type = srcType.name
+
+      // Load unloaded images
+      if (props[type] && !this.isImageLoaded(props[type])) {
+        this.loadImage(type, props[type], generateLoadDoneCallback(type, props[type]))
+      }
+    })
   }
 
   // Request that the lightbox be closed
   requestClose (event) {
-      // Call the parent close request
-      const closeLightbox = () => this.props.onCloseRequest(event)
+    // Call the parent close request
+    const closeLightbox = () => this.props.onCloseRequest(event)
 
-      if (this.props.animationDisabled ||
-          (event.type === 'keydown' && !this.props.animationOnKeyInput)
-      ) {
-          // No animation
-          return closeLightbox()
-      }
+    if (this.props.animationDisabled ||
+      (event.type === 'keydown' && !this.props.animationOnKeyInput)
+    ) {
+      // No animation
+      return closeLightbox()
+    }
 
-      // With animation
-      // Start closing animation
-      this.setState({ isClosing: true })
+    // With animation
+    // Start closing animation
+    this.setState({ isClosing: true })
 
-      // Perform the actual closing at the end of the animation
-      this.setTimeout(closeLightbox, this.props.animationDuration)
+    // Perform the actual closing at the end of the animation
+    this.setTimeout(closeLightbox, this.props.animationDuration)
   }
 
   requestMove (direction, event) {
       // Reset the zoom level on image move
       const nextState = {
-          zoomLevel: MIN_ZOOM_LEVEL
-          , offsetX: 0
-          , offsetY: 0
+        zoomLevel: MIN_ZOOM_LEVEL
+      , offsetX: 0
+      , offsetY: 0
       }
 
       // Enable animated states
       if (!this.props.animationDisabled && (!this.keyPressed || this.props.animationOnKeyInput)) {
-          nextState.shouldAnimate = true
-          this.setTimeout(
-              () => this.setState({ shouldAnimate: false }),
-              this.props.animationDuration
-          )
+        nextState.shouldAnimate = true
+        this.setTimeout(
+          () => this.setState({ shouldAnimate: false }),
+          this.props.animationDuration
+        )
       }
       this.keyPressed = false
 
       this.moveRequested = true
 
       if (direction === 'prev') {
-          this.keyCounter--
-          this.setState(nextState)
-          this.props.onMovePrevRequest(event)
+        this.keyCounter--
+        this.setState(nextState)
+        this.props.onMovePrevRequest(event)
       } else {
-          this.keyCounter++
-          this.setState(nextState)
-          this.props.onMoveNextRequest(event)
+        this.keyCounter++
+        this.setState(nextState)
+        this.props.onMoveNextRequest(event)
       }
   }
 
   // Request to transition to the next image
   requestMoveNext (event) {
-      this.requestMove('next', event)
+    this.requestMove('next', event)
   }
 
   // Request to transition to the previous image
   requestMovePrev (event) {
-      this.requestMove('prev', event)
+    this.requestMove('prev', event)
   }
 
   // Request to transition to the previous image
@@ -1210,16 +1193,22 @@ class ReactImageLightbox extends Component {
 
     // Images to be displayed
     const images = []
+    const Wrapper = this.props.wrapper
     const addImage = (srcType, imageClass, baseStyle = {}) => {
       // Ignore types that have no source defined for their full size image
-      if (!this.props[srcType]) { return }
+      if (!this.props[srcType]) {
+        return
+      }
 
-      const imageStyle = { ...baseStyle, ...transitionStyle }
+      const bestImageInfo = this.getBestImageForType(srcType)
+
+      const imageStyle = {}
+
+      const wrapperStyle = {...baseStyle, ...transitionStyle}
       if (zoomLevel > MIN_ZOOM_LEVEL) {
         imageStyle.cursor = 'move'
       }
 
-      const bestImageInfo = this.getBestImageForType(srcType)
       if (bestImageInfo === null) {
         const loadingIcon = (
           <div className={`ril-loading-circle ${styles.loadingCircle} ${styles.loadingContainer__icon}`}>
@@ -1242,7 +1231,7 @@ class ReactImageLightbox extends Component {
         images.push(
           <div
             className={`${imageClass} ${styles.image} not-loaded ril-not-loaded`}
-            style={imageStyle}
+            style={{...wrapperStyle}}
             key={this.props[srcType] + keyEndings[srcType]}
           >
             <div className={styles.loadingContainer} >
@@ -1250,28 +1239,31 @@ class ReactImageLightbox extends Component {
             </div>
           </div>
         )
-
         return
       }
 
-      imageStyle.width = bestImageInfo.width
-      imageStyle.height = bestImageInfo.height
-
       const imageSrc = bestImageInfo.src
 
+      const {width, height} = bestImageInfo
+
       // Wrap each image in a component, if provided
-      const Wrapper = this.props.wrapper || null
       if (Wrapper) {
+        wrapperStyle.width = bestImageInfo.width
+        wrapperStyle.height = bestImageInfo.height
         images.push(
           <Wrapper
             key={imageSrc + keyEndings[srcType]}
-            style={imageStyle}
+            style={{...wrapperStyle}}
+            className={`${imageClass} ${styles.image}`}
             children={(
               <img
                 className={`${imageClass} ${styles.image}`}
                 onDoubleClick={this.handleImageDoubleClick}
                 onWheel={this.handleImageMouseWheel}
                 onDragStart={e => e.preventDefault()}
+                style={{...wrapperStyle, ...imageStyle}}
+                width={width}
+                height={height}
                 src={imageSrc}
                 alt={(typeof imageTitle === 'string' ? imageTitle : translate('Image'))}
                 draggable={false}
@@ -1286,7 +1278,7 @@ class ReactImageLightbox extends Component {
             onDoubleClick={this.handleImageDoubleClick}
             onWheel={this.handleImageMouseWheel}
             onDragStart={e => e.preventDefault()}
-            style={imageStyle}
+            style={{...wrapperStyle, ...imageStyle}}
             src={imageSrc}
             key={imageSrc + keyEndings[srcType]}
             alt={(typeof imageTitle === 'string' ? imageTitle : translate('Image'))}
@@ -1549,7 +1541,10 @@ ReactImageLightbox.propTypes = {
 , enableZoom: PropTypes.bool
 
   // Wrap each image in a component
-, wrapper: PropTypes.element
+, wrapper: PropTypes.oneOfType([
+    PropTypes.element
+  , PropTypes.func
+  ])
 }
 ReactImageLightbox.defaultProps = {
   onMovePrevRequest: () => {}

@@ -90,13 +90,14 @@ const captions = [
 , ''
 ]
 
-const ImGonWrapItUp = ({children}) => (
-  <div className='ImGonWrapItUp'>
+const ImGonWrapItUp = ({children, className = ''}) => (
+  <div className={`ImGonWrapItUp ${className}`}>
     {children}
   </div>
 )
 ImGonWrapItUp.propTypes = {
-  children: PropTypes.element
+  children: PropTypes.element.isRequired
+, className: PropTypes.string
 }
 
 class App extends Component {
