@@ -76,29 +76,14 @@ const SOURCE_MOUSE = 1
 const SOURCE_TOUCH = 2
 const SOURCE_POINTER = 3
 
-const translate = (str, replaceStrings = null) => {
-    if (!str) {
-        return ''
-    }
-
-    let translated = str
-    if (replaceStrings) {
-        Object.keys(replaceStrings).forEach((placeholder) => {
-            translated = translated.replace(placeholder, replaceStrings[placeholder])
-        })
-    }
-
-    return translated
-}
-
 const getWindowWidth = () => {
-    if (typeof window === 'undefined') {
-        return 0
-    }
+  if (typeof window === 'undefined') {
+    return 0
+  }
 
-    return window.innerWidth ||
-        document.documentElement.clientWidth ||
-        document.body.clientWidth
+  return window.innerWidth ||
+    document.documentElement.clientWidth ||
+    document.body.clientWidth
 }
 
 const getWindowHeight = () => {
@@ -1313,7 +1298,7 @@ class ReactImageLightbox extends Component {
                 width={width}
                 height={height}
                 src={imageSrc}
-                alt={(typeof imageTitle === 'string' ? imageTitle : translate('Image'))}
+                alt={imageTitle}
                 draggable={false}
               />
             )}
@@ -1329,7 +1314,7 @@ class ReactImageLightbox extends Component {
             style={{...wrapperStyle, ...imageStyle}}
             src={imageSrc}
             key={imageSrc + keyEndings[srcType]}
-            alt={(typeof imageTitle === 'string' ? imageTitle : translate('Image'))}
+            alt={imageTitle}
             draggable={false}
           />
         )
@@ -1415,7 +1400,7 @@ class ReactImageLightbox extends Component {
         onRequestClose={clickOutsideToClose ? this.requestClose : noop}
         onAfterOpen={() => this.outerEl && this.outerEl.focus()} // Focus on the div with key handlers
         style={modalStyle}
-        contentLabel={translate('Lightbox')}
+        contentLabel='Lightbox'
       >
         <div // eslint-disable-line jsx-a11y/no-static-element-interactions
           // Floating modal with closing animations
@@ -1578,10 +1563,10 @@ ReactImageLightbox.propTypes = {
 , keyRepeatKeyupBonus: PropTypes.number
 
   // Image title
-, imageTitle: PropTypes.node
+, imageTitle: PropTypes.string
 
   // Image caption
-, imageCaption: PropTypes.node
+, imageCaption: PropTypes.string
 
   // Set z-index style, etc., for the parent react-modal (format: https://github.com/reactjs/react-modal#styles )
 , reactModalStyle: PropTypes.object // eslint-disable-line react/forbid-prop-types
