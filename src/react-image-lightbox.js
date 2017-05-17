@@ -2,55 +2,13 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import Modal from 'react-modal'
 
+import NextSvg from './NextSvg'
+import PrevSvg from './PrevSvg'
+import CloseSvg from './CloseSvg'
+import ZoomInSvg from './ZoomInSvg'
+import ZoomOutSvg from './ZoomOutSvg'
+
 import styles from './style.scss'
-
-const PrevSvg = () => (
-  <svg className={`${styles.navButtonPrev}`} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 34' width='40' height='68' >
-    <g stroke='white' strokeWidth='3' strokeLinecap='round' >
-      <path d='M18,2 2,17' />
-      <path d='M2,17 18,32' />
-    </g>
-  </svg>
-)
-
-const NextSvg = () => (
-  <svg className={`${styles.navButtonNext}`} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 34' width='40' height='68' >
-    <g stroke='white' strokeWidth='3' strokeLinecap='round' >
-      <path d='M2,2 18,17' />
-      <path d='M18,17 2,32' />
-    </g>
-  </svg>
-)
-
-const CloseSvg = () => (
-  <svg className={`${styles.closeButton}`} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='30' height='30' >
-    <g stroke='white' strokeWidth='2' strokeLinecap='round' >
-      <path d='M2,2 18,18' />
-      <path d='M2,18 18,2' />
-    </g>
-  </svg>
-)
-
-const ZoomInSvg = () => (
-  <svg className={`${styles.zoomInButton}`} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='30' height='30' >
-    <g stroke='white' strokeWidth='2' strokeLinecap='round' >
-      <path d='M1 19l6-6' />
-      <path d='M9 8h6' />
-      <path d='M12 5v6' />
-    </g>
-    <circle cx='12' cy='8' r='7' fill='none' stroke='white' strokeWidth='2' />
-  </svg>
-)
-
-const ZoomOutSvg = () => (
-  <svg className={`${styles.zoomOutButton}`} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='30' height='30' >
-    <g stroke='white' strokeWidth='2' strokeLinecap='round' >
-      <path d='M1 19l6-6' />
-      <path d='M9 8h6' />
-    </g>
-    <circle cx='12' cy='8' r='7' fill='none' stroke='white' strokeWidth='2' />
-  </svg>
-)
 
 const MIN_ZOOM_LEVEL = 0
 const MAX_ZOOM_LEVEL = 300
@@ -85,7 +43,6 @@ const getWindowWidth = () => {
     document.documentElement.clientWidth ||
     document.body.clientWidth
 }
-
 const getWindowHeight = () => {
     if (typeof window === 'undefined') {
         return 0
@@ -121,7 +78,7 @@ class ReactImageLightbox extends Component {
     this.requestMovePrev = this.requestMovePrev.bind(this)
 
     this.state = {
-      isClosing: !props.animationDisabled
+      isClosing: true
     , shouldAnimate: false
     , zoomLevel: MIN_ZOOM_LEVEL
     , offsetX: 0
@@ -189,9 +146,7 @@ class ReactImageLightbox extends Component {
     // Used to detect a move when all src's remain unchanged (four or more of the same image in a row)
     this.moveRequested = false
 
-    if (!this.props.animationDisabled) {
-      this.setState({ isClosing: false })
-    }
+    this.setState({ isClosing: false })
   }
 
   componentDidMount () {
@@ -507,12 +462,6 @@ class ReactImageLightbox extends Component {
 
     // Ignore key input during animations
     if (this.isAnimating()) {
-      return
-    }
-
-    // Allow slightly faster navigation through the images when user presses keys repeatedly
-    if (event.type === 'keyup') {
-      this.lastKeyDownTime -= this.props.keyRepeatKeyupBonus
       return
     }
 
@@ -1124,14 +1073,6 @@ class ReactImageLightbox extends Component {
     // Call the parent close request
     const closeLightbox = () => this.props.onCloseRequest(event)
 
-    if (this.props.animationDisabled ||
-      (event.type === 'keydown' && !this.props.animationOnKeyInput)
-    ) {
-      // No animation
-      return closeLightbox()
-    }
-
-    // With animation
     // Start closing animation
     this.setState({ isClosing: true })
 
@@ -1148,7 +1089,7 @@ class ReactImageLightbox extends Component {
       }
 
       // Enable animated states
-      if (!this.props.animationDisabled && (!this.keyPressed || this.props.animationOnKeyInput)) {
+      if (!this.keyPressed) {
         nextState.shouldAnimate = true
         this.setTimeout(
           () => this.setState({ shouldAnimate: false }),
@@ -1193,8 +1134,7 @@ class ReactImageLightbox extends Component {
   }
 
   render () {
-    const { animationDisabled
-          , animationDuration
+    const { animationDuration
           , clickOutsideToClose
           , enableZoom
           , imageTitle
@@ -1211,7 +1151,7 @@ class ReactImageLightbox extends Component {
     let transitionStyle = {}
 
     // Transition settings for sliding animations
-    if (!animationDisabled && this.isAnimating()) {
+    if (this.isAnimating()) {
       transitionStyle = {
         ...transitionStyle
       , transition: `transform ${animationDuration}ms`
@@ -1288,21 +1228,20 @@ class ReactImageLightbox extends Component {
             key={imageSrc + keyEndings[srcType]}
             style={{...wrapperStyle}}
             className={`${imageClass} ${styles.image}`}
-            children={(
-              <img
-                className={`${imageClass} ${styles.image}`}
-                onDoubleClick={this.handleImageDoubleClick}
-                onWheel={this.handleImageMouseWheel}
-                onDragStart={e => e.preventDefault()}
-                style={{...wrapperStyle, ...imageStyle}}
-                width={width}
-                height={height}
-                src={imageSrc}
-                alt={imageTitle}
-                draggable={false}
-              />
-            )}
-          />
+          >
+            <img
+              className={`${imageClass} ${styles.image}`}
+              onDoubleClick={this.handleImageDoubleClick}
+              onWheel={this.handleImageMouseWheel}
+              onDragStart={e => e.preventDefault()}
+              style={{...wrapperStyle, ...imageStyle}}
+              width={width}
+              height={height}
+              src={imageSrc}
+              alt={imageTitle}
+              draggable={false}
+            />
+          </Wrapper>
         )
       } else {
         images.push(
@@ -1547,20 +1486,11 @@ ReactImageLightbox.propTypes = {
   // Called when an image fails to load. (imageSrc: string, srcType: string, errorEvent: object): void
 , onImageLoadError: PropTypes.func
 
-  // Disable all animation
-, animationDisabled: PropTypes.bool
-
-  // Disable animation on actions performed with keyboard shortcuts
-, animationOnKeyInput: PropTypes.bool
-
   // Animation duration (ms)
 , animationDuration: PropTypes.number
 
   // Required interval of time (ms) between key actions (prevents excessively fast navigation of images)
 , keyRepeatLimit: PropTypes.number
-
-  // Amount of time (ms) restored after each keyup (makes rapid key presses slightly faster than holding down the key to navigate images)
-, keyRepeatKeyupBonus: PropTypes.number
 
   // Image title
 , imageTitle: PropTypes.string
@@ -1594,13 +1524,8 @@ ReactImageLightbox.defaultProps = {
 , onMoveNextRequest: () => {}
 , onImageLoadError: () => {}
 
-, animationDisabled: false
-, animationOnKeyInput: false
 , animationDuration: 300
-
 , keyRepeatLimit: 180
-, keyRepeatKeyupBonus: 40
-
 , reactModalStyle: {}
 , imagePadding: 10
 , clickOutsideToClose: true
