@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
-import PropTypes from 'prop-types'
 import Modal from 'react-modal'
+/* eslint-disable react/prop-types */
 
 import NextSvg from './NextSvg'
 import PrevSvg from './PrevSvg'
@@ -8,7 +8,8 @@ import CloseSvg from './CloseSvg'
 import ZoomInSvg from './ZoomInSvg'
 import ZoomOutSvg from './ZoomOutSvg'
 
-import styles from './style.scss'
+// import './style.sss'
+import styles from './style.sss'
 
 const MIN_ZOOM_LEVEL = 0
 const MAX_ZOOM_LEVEL = 300
@@ -1184,20 +1185,7 @@ class ReactImageLightbox extends Component {
 
       if (bestImageInfo === null) {
         const loadingIcon = (
-          <div className={`ril-loading-circle ${styles.loadingCircle} ${styles.loadingContainer__icon}`}>
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-            <div className={`ril-loading-circle-point ${styles.loadingCirclePoint}`} />
-          </div>
+          <div className={styles.spinner} />
         )
 
         // Fall back to loading icon if the thumbnail has not been loaded
@@ -1463,61 +1451,6 @@ class ReactImageLightbox extends Component {
       </Modal>
     )
   }
-}
-ReactImageLightbox.propTypes = {
-  // Main display image url
-  mainSrc: PropTypes.string.isRequired // eslint-disable-line react/no-unused-prop-types
-
-  // Previous display image url (displayed to the left). If left undefined, movePrev actions will not be performed, and the button not displayed
-, prevSrc: PropTypes.string
-
-  // Next display image url (displayed to the right). If left undefined, moveNext actions will not be performed, and the button not displayed
-, nextSrc: PropTypes.string
-
-  // Close window event. Should change the parent state such that the lightbox is not rendered
-, onCloseRequest: PropTypes.func.isRequired
-
-  // Move to previous image event. Should change the parent state such that props.prevSrc becomes props.mainSrc, props.mainSrc becomes props.nextSrc, etc.
-, onMovePrevRequest: PropTypes.func
-
-  // Move to next image event. Should change the parent state such that props.nextSrc becomes props.mainSrc, props.mainSrc becomes props.prevSrc, etc.
-, onMoveNextRequest: PropTypes.func
-
-  // Called when an image fails to load. (imageSrc: string, srcType: string, errorEvent: object): void
-, onImageLoadError: PropTypes.func
-
-  // Animation duration (ms)
-, animationDuration: PropTypes.number
-
-  // Required interval of time (ms) between key actions (prevents excessively fast navigation of images)
-, keyRepeatLimit: PropTypes.number
-
-  // Image title
-, imageTitle: PropTypes.string
-
-  // Image caption
-, imageCaption: PropTypes.string
-
-  // Set z-index style, etc., for the parent react-modal (format: https://github.com/reactjs/react-modal#styles )
-, reactModalStyle: PropTypes.object // eslint-disable-line react/forbid-prop-types
-
-  // Padding (px) between the edge of the window and the lightbox
-, imagePadding: PropTypes.number
-
-  // Array of custom toolbar buttons
-, toolbarButtons: PropTypes.arrayOf(PropTypes.node)
-
-  // When true, clicks outside of the image close the lightbox
-, clickOutsideToClose: PropTypes.bool
-
-  // Set to false to disable zoom functionality and hide zoom buttons
-, enableZoom: PropTypes.bool
-
-  // Wrap each image in a component
-, wrapper: PropTypes.oneOfType([
-    PropTypes.element
-  , PropTypes.func
-  ])
 }
 ReactImageLightbox.defaultProps = {
   onMovePrevRequest: () => {}

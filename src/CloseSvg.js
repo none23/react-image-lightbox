@@ -1,6 +1,7 @@
 import React from 'react'
 
-import styles from './style.scss'
+import styles from './style.sss'
+// import styles from './style.sss.json'
 
 const CloseSvg = () => (
   <svg className={`${styles.closeButton}`} xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' width='30' height='30' >
